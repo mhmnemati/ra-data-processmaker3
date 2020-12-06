@@ -50,7 +50,7 @@ const httpClient = (url, options = {}) => {
     return fetchUtils.fetchJson(url, options);
 };
 
-const provider = pmProvider("http://path.to.my.api/", undefined, httpClient);
+const provider = pmProvider("http://path.to.my.api/", httpClient);
 ```
 
 ---

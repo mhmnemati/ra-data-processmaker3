@@ -32,7 +32,7 @@ export default (
             }
         );
         const task = await httpClient(
-            `${apiUrl}/project/${result.json.pro_uid}/activity/${result.json.tas_uid}`,
+            `${apiUrl}/project/${result.json.pro_uid}/activity/${result.json.current_task[0].tas_uid}`,
             {
                 method: "GET",
                 headers: new Headers({}),
@@ -40,7 +40,7 @@ export default (
         );
 
         result.json.variables = variables.json;
-        result.json.task = task.json;
+        result.json.task = task.json.properties;
 
         return {
             data: {
@@ -68,7 +68,7 @@ export default (
             }
         );
         const task = await httpClient(
-            `${apiUrl}/project/${result.json.pro_uid}/activity/${result.json.tas_uid}`,
+            `${apiUrl}/project/${result.json.pro_uid}/activity/${result.json.current_task[0].tas_uid}`,
             {
                 method: "GET",
                 headers: new Headers({}),
@@ -83,7 +83,7 @@ export default (
         );
 
         result.json.variables = variables.json;
-        result.json.task = task.json;
+        result.json.task = task.json.properties;
         result.json.history = history.json;
 
         return {
