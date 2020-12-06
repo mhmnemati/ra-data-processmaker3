@@ -36,6 +36,8 @@
     },
     "homepage": "https://github.com/ckoliber/ra-data-processmaker3#readme",
     "dependencies": {
+        "@types/lodash": "^4.14.165",
+        "lodash": "^4.17.20",
         "query-string": "^6.13.7",
         "ra-core": "^3.10.3"
     },
