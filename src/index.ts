@@ -23,4 +23,8 @@ export default (
     updateMany: updateMany(apiUrl, httpClient),
     delete: deleteOne(apiUrl, httpClient),
     deleteMany: deleteMany(apiUrl, httpClient),
+
+    routeCase: async (id: string) => {},
+    uploadDocument: async (id: string) => {},
+    downloadDocument: async (id: string) => {},
 });
