@@ -111,7 +111,7 @@ export default (
             );
 
             caseObject.variables = variables.json;
-            caseObject.task = task.json;
+            caseObject.task = task.json.properties;
         }
 
         return {
@@ -160,7 +160,7 @@ export default (
             );
 
             caseObject.variables = variables.json;
-            caseObject.task = task.json;
+            caseObject.task = task.json.properties;
         }
 
         return {
