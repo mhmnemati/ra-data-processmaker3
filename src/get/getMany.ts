@@ -10,7 +10,9 @@ export default (
 
     let result: any = [];
     for (const id in params.ids) {
-        result.push((await handle(resource, { id: id })).data);
+        const item = await handle(resource, { id: id });
+
+        result.push(item.data);
     }
 
     return {
