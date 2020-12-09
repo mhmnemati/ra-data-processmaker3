@@ -142,7 +142,7 @@ export default (
         );
 
         let data = filter(
-            (result.json as any[]).map((item) => ({
+            (result.json as any[]).map((item, index) => ({
                 app_uid: item.APP_UID,
                 del_index: item.DEL_INDEX,
                 pro_uid: item.PRO_UID,
@@ -154,7 +154,7 @@ export default (
                 history_date: item.HISTORY_DATE,
                 history_data: item.HISTORY_DATA,
                 act_uid: `${item.PRO_UID}-${item.TAS_UID}`,
-                id: `${item.APP_UID}-${item.DEL_INDEX}-${item.PRO_UID}-${item.TAS_UID}`,
+                id: `${item.APP_UID}-${index}`,
             })),
             restFilter,
             params.sort,
