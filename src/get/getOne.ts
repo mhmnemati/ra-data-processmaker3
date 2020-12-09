@@ -13,49 +13,67 @@ export default (
         return {
             data: {
                 ...result.json,
-                id: result.json.usr_uid,
+                id: params.id,
             },
         };
     }
 
-    if (resource === "cases") {
-        let result = await httpClient(`${apiUrl}/cases/${params.id}`, {
-            method: "GET",
-            headers: new Headers({}),
-        });
+    if (resource === "activities") {
+        const [pro_uid, tas_uid] = params.id.toString().split("-");
 
-        const variables = await httpClient(
-            `${apiUrl}/cases/${result.json.app_uid}/variables`,
-            {
-                method: "GET",
-                headers: new Headers({}),
-            }
-        );
-        const task = await httpClient(
-            `${apiUrl}/project/${result.json.pro_uid}/activity/${result.json.current_task[0].tas_uid}`,
+        const result = await httpClient(
+            `${apiUrl}/project/${pro_uid}/activity/${tas_uid}`,
             {
                 method: "GET",
                 headers: new Headers({}),
             }
         );
 
-        result.json.variables = variables.json;
-        result.json.task = task.json.properties;
+        let steps = await httpClient(
+            `${apiUrl}/project/${pro_uid}/activity/${tas_uid}/steps`,
+            {
+                method: "GET",
+                headers: new Headers({}),
+            }
+        );
+
+        steps.json = await Promise.all(
+            steps.json.map(async (item: any) => {
+                if (item.step_type_obj === "DYNAFORM") {
+                    const dynaform = await httpClient(
+                        `${apiUrl}/project/${pro_uid}/dynaform/${item.step_uid_obj}`,
+                        {
+                            method: "GET",
+                            headers: new Headers({}),
+                        }
+                    );
+
+                    return {
+                        ...item,
+                        dynaform: dynaform.json,
+                    };
+                }
+
+                return item;
+            })
+        );
 
         return {
             data: {
                 ...result.json,
-                id: result.json.app_uid,
+                steps: steps.json,
+                id: params.id,
             },
         };
     }
 
     if (
+        resource === "cases" ||
         resource === "cases-participated" ||
         resource === "cases-unassigned" ||
         resource === "cases-paused"
     ) {
-        let result = await httpClient(`${apiUrl}/cases/${params.id}`, {
+        const result = await httpClient(`${apiUrl}/cases/${params.id}`, {
             method: "GET",
             headers: new Headers({}),
         });
@@ -67,29 +85,13 @@ export default (
                 headers: new Headers({}),
             }
         );
-        const task = await httpClient(
-            `${apiUrl}/project/${result.json.pro_uid}/activity/${result.json.current_task[0].tas_uid}`,
-            {
-                method: "GET",
-                headers: new Headers({}),
-            }
-        );
-        const history = await httpClient(
-            `${apiUrl}/extrarest/cases/${result.json.app_uid}`,
-            {
-                method: "GET",
-                headers: new Headers({}),
-            }
-        );
-
-        result.json.variables = variables.json;
-        result.json.task = task.json.properties;
-        result.json.history = history.json;
 
         return {
             data: {
                 ...result.json,
-                id: result.json.app_uid,
+                variables: variables.json,
+                act_uid: `${result.json.pro_uid}-${result.json.current_task[0].tas_uid}`,
+                id: params.id,
             },
         };
     }

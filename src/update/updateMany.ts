@@ -8,7 +8,7 @@ export default (
 ): DataProvider["updateMany"] => async (resource, params) => {
     const handle = updateOne(apiUrl, httpClient);
 
-    for (const id in params.ids) {
+    for (const id of params.ids) {
         await handle(resource, {
             previousData: { id: id },
             data: params.data,
