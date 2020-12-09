@@ -9,7 +9,7 @@ export default (
     const handle = getOne(apiUrl, httpClient);
 
     let result: any = [];
-    for (const id in params.ids) {
+    for (const id of params.ids) {
         const item = await handle(resource, { id: id });
 
         result.push(item.data);

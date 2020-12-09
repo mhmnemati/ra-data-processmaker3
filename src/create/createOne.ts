@@ -12,7 +12,10 @@ export default (
         });
 
         return {
-            data: result.json,
+            data: {
+                ...result.json,
+                id: result.json.usr_uid,
+            },
         };
     }
 
@@ -30,7 +33,7 @@ export default (
                 ...params.data,
                 app_uid: result.json.app_uid,
                 app_number: result.json.app_number,
-                id: result.json.id,
+                id: result.json.app_uid,
             },
         };
     }

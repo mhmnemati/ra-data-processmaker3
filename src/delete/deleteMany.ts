@@ -8,7 +8,7 @@ export default (
 ): DataProvider["deleteMany"] => async (resource, params) => {
     const handle = deleteOne(apiUrl, httpClient);
 
-    for (const id in params.ids) {
+    for (const id of params.ids) {
         await handle(resource, {
             previousData: { id: id },
             id: id,

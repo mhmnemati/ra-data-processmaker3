@@ -5,6 +5,7 @@ export default (
     httpClient = fetchUtils.fetchJson
 ): DataProvider["update"] => async (resource, params) => {
     if (resource === "users") {
+        const id = params.data.id;
         delete params.data.id;
 
         await httpClient(`${apiUrl}/users/${params.id}`, {
@@ -17,11 +18,15 @@ export default (
             data: {
                 ...params.previousData,
                 ...params.data,
+                id: id,
             },
         };
     }
 
     if (resource === "cases") {
+        const id = params.data.id;
+        delete params.data.id;
+
         const variables = params.data.variables;
 
         await httpClient(`${apiUrl}/cases/${params.id}/variable`, {
@@ -34,6 +39,7 @@ export default (
             data: {
                 ...params.previousData,
                 ...params.data,
+                id: id,
             },
         };
     }
