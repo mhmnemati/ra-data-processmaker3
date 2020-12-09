@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.4.0
+
+-   **Fix**: add ra-core, query-string, lodash to `peerDependencies`, `devDependencies`
+
 ## v0.3.0
 
 -   **Fix**: add `id field` in create, update return
