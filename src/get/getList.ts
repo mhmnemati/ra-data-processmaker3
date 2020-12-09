@@ -58,7 +58,7 @@ export default (
         });
 
         let data = filter(
-            (result.json.data as any[]).map((item) => ({
+            (result.json as any[]).map((item) => ({
                 ...item,
                 id: item.usr_uid,
             })),
@@ -131,8 +131,10 @@ export default (
     }
 
     if (resource === "histories") {
+        const { app_uid, ...restFilter } = params.filter;
+
         const result = await httpClient(
-            `${apiUrl}/extrarest/cases/${params.filter.app_uid}`,
+            `${apiUrl}/extrarest/cases/${app_uid}`,
             {
                 method: "GET",
                 headers: new Headers({}),
@@ -140,12 +142,21 @@ export default (
         );
 
         let data = filter(
-            (result.json.data as any[]).map((item) => ({
-                ...item,
-                act_uid: `${item.pro_uid}-${item.tas_uid}`,
-                id: `${item.app_uid}-${item.del_index}-${item.pro_uid}-${item.tas_uid}`,
+            (result.json as any[]).map((item) => ({
+                app_uid: item.APP_UID,
+                del_index: item.DEL_INDEX,
+                pro_uid: item.PRO_UID,
+                tas_uid: item.TAS_UID,
+                dyn_uid: item.DYN_UID,
+                obj_type: item.OBJ_TYPE,
+                usr_uid: item.USR_UID,
+                app_status: item.APP_STATUS,
+                history_date: item.HISTORY_DATE,
+                history_data: item.HISTORY_DATA,
+                act_uid: `${item.PRO_UID}-${item.TAS_UID}`,
+                id: `${item.APP_UID}-${item.DEL_INDEX}-${item.PRO_UID}-${item.TAS_UID}`,
             })),
-            params.filter,
+            restFilter,
             params.sort,
             params.pagination
         );
