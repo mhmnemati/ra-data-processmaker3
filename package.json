@@ -35,15 +35,18 @@
         "url": "https://github.com/ckoliber/ra-data-processmaker3/issues"
     },
     "homepage": "https://github.com/ckoliber/ra-data-processmaker3#readme",
-    "dependencies": {
-        "@types/lodash": "^4.14.165",
+    "peerDependencies": {
         "lodash": "^4.17.20",
         "query-string": "^6.13.7",
-        "ra-core": "^3.10.3"
+        "ra-core": "^3.10.4"
     },
     "devDependencies": {
+        "@types/lodash": "^4.14.165",
         "@types/mocha": "^8.0.4",
+        "lodash": "^4.17.20",
         "mocha": "^8.2.1",
+        "query-string": "^6.13.7",
+        "ra-core": "^3.10.4",
         "ts-node": "^9.1.0",
         "typescript": "^4.1.2"
     }
