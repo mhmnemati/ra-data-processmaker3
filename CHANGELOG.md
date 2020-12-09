@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.3.0
+
+-   **Fix**: add `id field` in create, update return
+-   **Feat**: add `activities` get
+-   **Fix**: history result `capital case`
+-   **Fix**: history `duplicate` ids
+
 ## v0.2.0
 
 -   **Fix**: change task `variable`
