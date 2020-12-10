@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.5.0
+
+-   **Feat**: add `route-case` custom method
+
 ## v0.4.0
 
 -   **Fix**: add ra-core, query-string, lodash to `peerDependencies`, `devDependencies`

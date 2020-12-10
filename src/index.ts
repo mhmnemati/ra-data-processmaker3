@@ -10,10 +10,16 @@ import updateMany from "./update/updateMany";
 import deleteOne from "./delete/deleteOne";
 import deleteMany from "./delete/deleteMany";
 
+interface PM3DataProvider extends DataProvider {
+    routeCase: (id: string) => Promise<void>;
+    uploadDocument: (id: string) => Promise<void>;
+    downloadDocument: (id: string) => Promise<void>;
+}
+
 export default (
     apiUrl: string,
     httpClient = fetchUtils.fetchJson
-): DataProvider => ({
+): PM3DataProvider => ({
     getList: getList(apiUrl, httpClient),
     getOne: getOne(apiUrl, httpClient),
     getMany: getMany(apiUrl, httpClient),
@@ -24,7 +30,15 @@ export default (
     delete: deleteOne(apiUrl, httpClient),
     deleteMany: deleteMany(apiUrl, httpClient),
 
-    routeCase: async (id: string) => {},
+    routeCase: async (id: string) => {
+        await httpClient(`${apiUrl}/cases/${id}/route-case`, {
+            method: "PUT",
+            body: JSON.stringify({
+                executeTriggersBeforeAssignment: true,
+            }),
+            headers: new Headers({}),
+        });
+    },
     uploadDocument: async (id: string) => {},
     downloadDocument: async (id: string) => {},
 });
