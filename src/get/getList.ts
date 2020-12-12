@@ -73,6 +73,40 @@ export default (
         };
     }
 
+    if (resource === "groups") {
+        const result = await httpClient(`${apiUrl}/groups`, {
+            method: "GET",
+            headers: new Headers({}),
+        });
+
+        let data = filter(
+            (result.json as any[]).map((item) => ({
+                ...item,
+                id: item.grp_uid,
+            })),
+            params.filter,
+            params.sort,
+            params.pagination
+        );
+
+        for (let groupObject of data) {
+            const members = await httpClient(
+                `${apiUrl}/groups/${groupObject.grp_uid}/users`,
+                {
+                    method: "GET",
+                    headers: new Headers({}),
+                }
+            );
+
+            groupObject.members = members.json;
+        }
+
+        return {
+            data: data,
+            total: result.json.length,
+        };
+    }
+
     if (
         resource === "cases" ||
         resource === "cases-participated" ||

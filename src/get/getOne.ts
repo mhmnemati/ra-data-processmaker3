@@ -18,6 +18,29 @@ export default (
         };
     }
 
+    if (resource === "groups") {
+        const result = await httpClient(`${apiUrl}/groups/${params.id}`, {
+            method: "GET",
+            headers: new Headers({}),
+        });
+
+        const members = await httpClient(
+            `${apiUrl}/groups/${result.json.grp_uid}/users`,
+            {
+                method: "GET",
+                headers: new Headers({}),
+            }
+        );
+
+        return {
+            data: {
+                ...result.json,
+                members: members.json,
+                id: params.id,
+            },
+        };
+    }
+
     if (resource === "activities") {
         const [pro_uid, tas_uid] = params.id.toString().split("-");
 
