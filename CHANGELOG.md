@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.6.0
+
+-   **Feat**: add `groups` resource
+
 ## v0.5.0
 
 -   **Feat**: add `route-case` custom method
