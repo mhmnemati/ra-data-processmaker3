@@ -12,8 +12,12 @@ import deleteMany from "./delete/deleteMany";
 
 interface PM3DataProvider extends DataProvider {
     routeCase: (id: string) => Promise<void>;
-    uploadDocument: (id: string) => Promise<void>;
-    downloadDocument: (id: string) => Promise<void>;
+    uploadDocument: (
+        id: string,
+        file: File,
+        taskId: string,
+        documentId: string
+    ) => Promise<string>;
 }
 
 export default (
@@ -39,6 +43,27 @@ export default (
             headers: new Headers({}),
         });
     },
-    uploadDocument: async (id: string) => {},
-    downloadDocument: async (id: string) => {},
+    uploadDocument: async (
+        id: string,
+        file: File,
+        taskId: string,
+        documentId: string
+    ) => {
+        let data = new FormData();
+        data.append("form", file, file.name);
+        data.append("tas_uid", taskId);
+        data.append("inp_doc_uid", documentId);
+        data.append("app_doc_comment", " ");
+
+        const result = await httpClient(
+            `${apiUrl}/cases/${id}/input-document`,
+            {
+                method: "POST",
+                body: data,
+                headers: new Headers({}),
+            }
+        );
+
+        return `cases/${id}/input-document/${result.json.app_doc_uid}/file?v=${result.json.app_doc_version}`;
+    },
 });
