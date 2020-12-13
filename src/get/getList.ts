@@ -14,10 +14,46 @@ const filter = (
 ) => {
     return data
         .filter((item) =>
-            Object.entries(filter).reduce<boolean>(
-                (acc, [key, value]) => acc && lodash.get(item, key) === value,
-                true
-            )
+            Object.entries(filter).reduce<boolean>((acc, [key, value]) => {
+                if (typeof value === "object") {
+                    if ("neq" in value) {
+                        return acc && lodash.get(item, key) !== value.neq;
+                    }
+
+                    if ("geq" in value) {
+                        return acc && lodash.get(item, key) >= value.geq;
+                    }
+
+                    if ("gt" in value) {
+                        return acc && lodash.get(item, key) > value.gt;
+                    }
+
+                    if ("leq" in value) {
+                        return acc && lodash.get(item, key) <= value.leq;
+                    }
+
+                    if ("lt" in value) {
+                        return acc && lodash.get(item, key) < value.lt;
+                    }
+
+                    if ("between" in value) {
+                        return (
+                            acc &&
+                            lodash.get(item, key) >= value.between[0] &&
+                            lodash.get(item, key) <= value.between[1]
+                        );
+                    }
+
+                    if ("match" in value) {
+                        return (
+                            acc &&
+                            new RegExp(value.match).test(lodash.get(item, key))
+                        );
+                    }
+                }
+
+                return acc && lodash.get(item, key) === value;
+            }, true)
         )
         .sort((first, second) => {
             const firstField = lodash.get(first, sort.field);

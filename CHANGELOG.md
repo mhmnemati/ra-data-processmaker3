@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.7.0
+
+-   **Feat**: add `filter` operations
+
 ## v0.6.0
 
 -   **Feat**: add `groups` resource
