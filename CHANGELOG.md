@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.8.0
+
+-   **Feat**: add `uploadDocument` method
+
 ## v0.7.0
 
 -   **Feat**: add `filter` operations
