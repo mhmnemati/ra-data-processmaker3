@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.9.0
+
+-   **Fix**: getList, return `count` of `filtered` data
+
 ## v0.8.0
 
 -   **Feat**: add `uploadDocument` method
