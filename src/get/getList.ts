@@ -6,81 +6,81 @@ import {
 } from "ra-core";
 import lodash from "lodash";
 
-const filter = (
-    data: any[],
-    filter: object,
-    sort: SortPayload,
-    pagination: PaginationPayload
-) => {
-    return data
-        .filter((item) =>
-            Object.entries(filter).reduce<boolean>((acc, [key, value]) => {
-                if (typeof value === "object") {
-                    if ("neq" in value) {
-                        return acc && lodash.get(item, key) !== value.neq;
-                    }
-
-                    if ("geq" in value) {
-                        return acc && lodash.get(item, key) >= value.geq;
-                    }
-
-                    if ("gt" in value) {
-                        return acc && lodash.get(item, key) > value.gt;
-                    }
-
-                    if ("leq" in value) {
-                        return acc && lodash.get(item, key) <= value.leq;
-                    }
-
-                    if ("lt" in value) {
-                        return acc && lodash.get(item, key) < value.lt;
-                    }
-
-                    if ("between" in value) {
-                        return (
-                            acc &&
-                            lodash.get(item, key) >= value.between[0] &&
-                            lodash.get(item, key) <= value.between[1]
-                        );
-                    }
-
-                    if ("match" in value) {
-                        return (
-                            acc &&
-                            new RegExp(value.match).test(lodash.get(item, key))
-                        );
-                    }
+const filter = (data: any[], filter: object) => {
+    return data.filter((item) =>
+        Object.entries(filter).reduce<boolean>((acc, [key, value]) => {
+            if (typeof value === "object") {
+                if ("neq" in value) {
+                    return acc && lodash.get(item, key) !== value.neq;
                 }
 
-                return acc && lodash.get(item, key) === value;
-            }, true)
-        )
-        .sort((first, second) => {
-            const firstField = lodash.get(first, sort.field);
-            const secondField = lodash.get(second, sort.field);
+                if ("geq" in value) {
+                    return acc && lodash.get(item, key) >= value.geq;
+                }
 
-            if (sort.order === "ASC") {
-                if (firstField < secondField) {
-                    return -1;
+                if ("gt" in value) {
+                    return acc && lodash.get(item, key) > value.gt;
                 }
-                if (firstField > secondField) {
-                    return 1;
+
+                if ("leq" in value) {
+                    return acc && lodash.get(item, key) <= value.leq;
                 }
-            } else {
-                if (firstField < secondField) {
-                    return 1;
+
+                if ("lt" in value) {
+                    return acc && lodash.get(item, key) < value.lt;
                 }
-                if (firstField > secondField) {
-                    return -1;
+
+                if ("between" in value) {
+                    return (
+                        acc &&
+                        lodash.get(item, key) >= value.between[0] &&
+                        lodash.get(item, key) <= value.between[1]
+                    );
+                }
+
+                if ("match" in value) {
+                    return (
+                        acc &&
+                        new RegExp(value.match).test(lodash.get(item, key))
+                    );
                 }
             }
 
-            return 0;
-        })
-        .slice(
-            (pagination.page - 1) * pagination.perPage,
-            (pagination.page - 1) * pagination.perPage + pagination.perPage
-        );
+            return acc && lodash.get(item, key) === value;
+        }, true)
+    );
+};
+
+const sort = (data: any[], sort: SortPayload) => {
+    return data.sort((first, second) => {
+        const firstField = lodash.get(first, sort.field);
+        const secondField = lodash.get(second, sort.field);
+
+        if (sort.order === "ASC") {
+            if (firstField < secondField) {
+                return -1;
+            }
+            if (firstField > secondField) {
+                return 1;
+            }
+        } else {
+            if (firstField < secondField) {
+                return 1;
+            }
+            if (firstField > secondField) {
+                return -1;
+            }
+        }
+
+        return 0;
+    });
+};
+
+const paginate = (data: any[], pagination: PaginationPayload) => {
+    return data.slice(
+        (pagination.page - 1) * pagination.perPage,
+        (pagination.page - 1) * pagination.perPage + pagination.perPage
+    );
 };
 
 export default (
@@ -93,19 +93,22 @@ export default (
             headers: new Headers({}),
         });
 
-        let data = filter(
+        const filteredData = filter(
             (result.json as any[]).map((item) => ({
                 ...item,
                 id: item.usr_uid,
             })),
-            params.filter,
-            params.sort,
+            params.filter
+        );
+
+        const data = paginate(
+            sort(filteredData, params.sort),
             params.pagination
         );
 
         return {
             data: data,
-            total: result.json.length,
+            total: filteredData.length,
         };
     }
 
@@ -115,13 +118,16 @@ export default (
             headers: new Headers({}),
         });
 
-        let data = filter(
+        const filteredData = filter(
             (result.json as any[]).map((item) => ({
                 ...item,
                 id: item.grp_uid,
             })),
-            params.filter,
-            params.sort,
+            params.filter
+        );
+
+        const data = paginate(
+            sort(filteredData, params.sort),
             params.pagination
         );
 
@@ -139,7 +145,7 @@ export default (
 
         return {
             data: data,
-            total: result.json.length,
+            total: filteredData.length,
         };
     }
 
@@ -171,14 +177,17 @@ export default (
             );
         }
 
-        let data = filter(
+        const filteredData = filter(
             result.json.map((item) => ({
                 ...item,
                 act_uid: `${item.pro_uid}-${item.tas_uid}`,
                 id: item.app_uid,
             })),
-            params.filter,
-            params.sort,
+            params.filter
+        );
+
+        const data = paginate(
+            sort(filteredData, params.sort),
             params.pagination
         );
 
@@ -196,7 +205,7 @@ export default (
 
         return {
             data: data,
-            total: result.json.length,
+            total: filteredData.length,
         };
     }
 
@@ -211,7 +220,7 @@ export default (
             }
         );
 
-        let data = filter(
+        const filteredData = filter(
             (result.json as any[]).map((item, index) => ({
                 app_uid: item.APP_UID,
                 del_index: item.DEL_INDEX,
@@ -226,14 +235,17 @@ export default (
                 act_uid: `${item.PRO_UID}-${item.TAS_UID}`,
                 id: `${item.APP_UID}-${index}`,
             })),
-            restFilter,
-            params.sort,
+            restFilter
+        );
+
+        const data = paginate(
+            sort(filteredData, params.sort),
             params.pagination
         );
 
         return {
             data: data,
-            total: result.json.length,
+            total: filteredData.length,
         };
     }
 
