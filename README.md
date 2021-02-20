@@ -10,7 +10,7 @@ React Admin ProcessMaker3 DataProvider
 ## Installation
 
 ```bash
-npm i --save ra-data-processmaker3
+npm i --save query-string ra-data-processmaker3
 ```
 
 ## Usage
