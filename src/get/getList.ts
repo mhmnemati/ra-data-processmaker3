@@ -9,6 +9,10 @@ import lodash from "lodash";
 const filter = (data: any[], filter: object) => {
     return data.filter((item) =>
         Object.entries(filter).reduce<boolean>((acc, [key, value]) => {
+            if (Array.isArray(value)) {
+                return acc && value.includes(lodash.get(item, key));
+            }
+
             if (typeof value === "object") {
                 if ("neq" in value) {
                     return acc && lodash.get(item, key) !== value.neq;
