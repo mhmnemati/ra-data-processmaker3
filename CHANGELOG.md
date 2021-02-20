@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.10.0
+
+-   **feat**: add `array validators` to filter operation
+-   **feat**: add `short` term `array validator`
+-   **deps**: upgrade `packages`
+
 ## v0.9.0
 
 -   **Fix**: getList, return `count` of `filtered` data
