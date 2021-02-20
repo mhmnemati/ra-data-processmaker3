@@ -44,6 +44,14 @@ const filter = (data: any[], filter: object) => {
                         new RegExp(value.match).test(lodash.get(item, key))
                     );
                 }
+
+                if ("in" in value) {
+                    return acc && value.in.includes(lodash.get(item, key));
+                }
+
+                if ("nin" in value) {
+                    return acc && !value.in.includes(lodash.get(item, key));
+                }
             }
 
             return acc && lodash.get(item, key) === value;
